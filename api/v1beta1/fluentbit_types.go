@@ -24,15 +24,16 @@ import (
 
 // FluentbitSpec defines the desired state of Fluentbit
 type FluentbitSpec struct {
-	Annotations map[string]string           `json:"annotations,omitempty"`
-	Image       ImageSpec                   `json:"image,omitempty"`
-	TLS         FluentbitTLS                `json:"tls,omitempty"`
-	TargetHost  string                      `json:"targetHost,omitempty"`
-	TargetPort  int32                       `json:"targetPort,omitempty"`
-	Resources   corev1.ResourceRequirements `json:"resources,omitempty"`
-	Parser      string                      `json:"parser,omitempty"`
-	Tolerations []corev1.Toleration         `json:"tolerations,omitempty"`
-	Metrics     *Metrics                    `json:"metrics,omitempty"`
+	Annotations    map[string]string           `json:"annotations,omitempty"`
+	Image          ImageSpec                   `json:"image,omitempty"`
+	TLS            FluentbitTLS                `json:"tls,omitempty"`
+	TargetHost     string                      `json:"targetHost,omitempty"`
+	TargetPort     int32                       `json:"targetPort,omitempty"`
+	Resources      corev1.ResourceRequirements `json:"resources,omitempty"`
+	Parser         string                      `json:"parser,omitempty"`
+	Tolerations    []corev1.Toleration         `json:"tolerations,omitempty"`
+	Metrics        *Metrics                    `json:"metrics,omitempty"`
+	ServiceAccount string                      `json:"serviceAccount,omitempty"`
 }
 
 // +kubebuilder:object:generate=true
