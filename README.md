@@ -82,6 +82,7 @@ The detailed CRD documentation can be found [here](/docs/crds.md).
 
 *connection between custom resources*
 
+<p align="center"><img src="docs/img/routing.png" width="660"></p>
 ---
 
 ## Contents
