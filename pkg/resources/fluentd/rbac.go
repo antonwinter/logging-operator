@@ -23,6 +23,10 @@ import (
 )
 
 func (r *Reconciler) clusterRole() (runtime.Object, k8sutil.DesiredState) {
+	if r.Logging.Spec.FluentdSpec.ServiceAccount == "" {
+		return nil, k8sutil.StatePresent
+	}
+
 	return &rbacv1.Role{
 		ObjectMeta: templates.FluentdObjectMeta(r.Logging.QualifiedName(roleName), r.Logging.Labels, r.Logging),
 		Rules: []rbacv1.PolicyRule{
@@ -36,6 +40,10 @@ func (r *Reconciler) clusterRole() (runtime.Object, k8sutil.DesiredState) {
 }
 
 func (r *Reconciler) clusterRoleBinding() (runtime.Object, k8sutil.DesiredState) {
+	if r.Logging.Spec.FluentdSpec.ServiceAccount == "" {
+		return nil, k8sutil.StatePresent
+	}
+
 	return &rbacv1.RoleBinding{
 		ObjectMeta: templates.FluentdObjectMeta(r.Logging.QualifiedName(roleBindingName), r.Logging.Labels, r.Logging),
 		RoleRef: rbacv1.RoleRef{
@@ -46,7 +54,7 @@ func (r *Reconciler) clusterRoleBinding() (runtime.Object, k8sutil.DesiredState)
 		Subjects: []rbacv1.Subject{
 			{
 				Kind:      "ServiceAccount",
-				Name:      r.Logging.QualifiedName(serviceAccountName),
+				Name:      r.Logging.QualifiedName(defaultServiceAccountName),
 				Namespace: r.Logging.Spec.ControlNamespace,
 			},
 		},
@@ -54,7 +62,11 @@ func (r *Reconciler) clusterRoleBinding() (runtime.Object, k8sutil.DesiredState)
 }
 
 func (r *Reconciler) serviceAccount() (runtime.Object, k8sutil.DesiredState) {
+	if r.Logging.Spec.FluentdSpec.ServiceAccount == "" {
+		return nil, k8sutil.StatePresent
+	}
+
 	return &corev1.ServiceAccount{
-		ObjectMeta: templates.FluentdObjectMeta(r.Logging.QualifiedName(serviceAccountName), r.Logging.Labels, r.Logging),
+		ObjectMeta: templates.FluentdObjectMeta(r.Logging.QualifiedName(defaultServiceAccountName), r.Logging.Labels, r.Logging),
 	}, k8sutil.StatePresent
 }
