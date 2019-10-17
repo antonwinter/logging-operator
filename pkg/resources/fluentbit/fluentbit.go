@@ -44,8 +44,8 @@ func (r *Reconciler) getFluentBitLabels() map[string]string {
 }
 
 func (r *Reconciler) getServiceAccount() string {
-	if r.Logging.Spec.FluentbitSpec.ServiceAccount != "" {
-		return r.Logging.Spec.FluentbitSpec.ServiceAccount
+	if r.Logging.Spec.FluentbitSpec.Security.ServiceAccount != "" {
+		return r.Logging.Spec.FluentbitSpec.Security.ServiceAccount
 	}
 	return r.Logging.QualifiedName(defaultServiceAccountName)
 }
