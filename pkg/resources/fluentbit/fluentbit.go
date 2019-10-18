@@ -26,12 +26,13 @@ import (
 )
 
 const (
-	defaultServiceAccountName = "logging"
-	clusterRoleBindingName    = "logging"
-	clusterRoleName           = "logging"
-	fluentBitSecretConfigName = "fluentbit"
-	fluentbitDaemonSetName    = "fluentbit"
-	fluentbitServiceName      = "fluentbit"
+	defaultServiceAccountName      = "logging"
+	clusterRoleBindingName         = "logging"
+	clusterRoleName                = "logging"
+	fluentBitSecretConfigName      = "fluentbit"
+	fluentbitDaemonSetName         = "fluentbit"
+	fluentbitPodSecurityPolicyName = "fluentbit"
+	fluentbitServiceName           = "fluentbit"
 )
 
 func generataLoggingRefLabels(loggingRef string) map[string]string {
@@ -70,6 +71,7 @@ func (r *Reconciler) Reconcile() (*reconcile.Result, error) {
 		r.serviceAccount,
 		r.clusterRole,
 		r.clusterRoleBinding,
+		//r.clusterPodSecurityPolicy,
 		r.configSecret,
 		r.daemonSet,
 		r.serviceMetrics,

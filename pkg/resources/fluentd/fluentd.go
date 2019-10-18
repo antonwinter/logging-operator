@@ -30,13 +30,14 @@ import (
 )
 
 const (
-	SecretConfigName    = "fluentd"
-	AppSecretConfigName = "fluentd-app"
-	AppConfigKey        = "fluentd.conf"
-	StatefulSetName     = "fluentd"
-	ServiceName         = "fluentd"
-	OutputSecretName    = "fluentd-output"
-	OutputSecretPath    = "/fluentd/secret"
+	SecretConfigName      = "fluentd"
+	AppSecretConfigName   = "fluentd-app"
+	AppConfigKey          = "fluentd.conf"
+	StatefulSetName       = "fluentd"
+	PodSecurityPolicyName = "fluentd"
+	ServiceName           = "fluentd"
+	OutputSecretName      = "fluentd-output"
+	OutputSecretPath      = "/fluentd/secret"
 
 	bufferVolumeName          = "fluentd-buffer"
 	defaultServiceAccountName = "fluentd"
@@ -58,8 +59,8 @@ func (r *Reconciler) getFluentdLabels() map[string]string {
 }
 
 func (r *Reconciler) getServiceAccount() string {
-	if r.Logging.Spec.FluentdSpec.ServiceAccount != "" {
-		return r.Logging.Spec.FluentdSpec.ServiceAccount
+	if r.Logging.Spec.FluentdSpec.Security.ServiceAccount != "" {
+		return r.Logging.Spec.FluentdSpec.Security.ServiceAccount
 	}
 	return r.Logging.QualifiedName(defaultServiceAccountName)
 }
@@ -142,6 +143,7 @@ func (r *Reconciler) Reconcile() (*reconcile.Result, error) {
 		r.serviceAccount,
 		r.clusterRole,
 		r.clusterRoleBinding,
+		//r.clusterPodSecurityPolicy,
 		r.secretConfig,
 		r.appconfigMap,
 		r.statefulset,

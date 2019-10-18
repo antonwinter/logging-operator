@@ -85,6 +85,10 @@ func (l *Logging) SetDefaults() *Logging {
 		if copy.Spec.FluentdSpec.Annotations == nil {
 			copy.Spec.FluentdSpec.Annotations = make(map[string]string)
 		}
+		if copy.Spec.FluentdSpec.Security == nil {
+			copy.Spec.FluentdSpec.Security = &Security{}
+			copy.Spec.FluentdSpec.Security.RoleBasedAccessControlCreate = true
+		}
 		if copy.Spec.FluentdSpec.Metrics != nil {
 			if copy.Spec.FluentdSpec.Metrics.Path == "" {
 				copy.Spec.FluentdSpec.Metrics.Path = "/metrics"
@@ -180,7 +184,10 @@ func (l *Logging) SetDefaults() *Logging {
 		if copy.Spec.FluentbitSpec.Annotations == nil {
 			copy.Spec.FluentbitSpec.Annotations = make(map[string]string)
 		}
-
+		if copy.Spec.FluentbitSpec.Security == nil {
+			copy.Spec.FluentbitSpec.Security = &Security{}
+			copy.Spec.FluentbitSpec.Security.RoleBasedAccessControlCreate = true
+		}
 		if copy.Spec.FluentbitSpec.Metrics != nil {
 			if copy.Spec.FluentbitSpec.Metrics.Path == "" {
 				copy.Spec.FluentbitSpec.Metrics.Path = "/api/v1/metrics/prometheus"

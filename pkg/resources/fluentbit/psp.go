@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package fluentd
+package fluentbit
 
 import (
 	"github.com/banzaicloud/logging-operator/pkg/k8sutil"
@@ -25,12 +25,13 @@ import (
 )
 
 func (r *Reconciler) clusterPodSecurityPolicy() (runtime.Object, k8sutil.DesiredState) {
-	if r.Logging.Spec.FluentdSpec.Security.PodSecurityPolicyCreate {
+	if r.Logging.Spec.FluentbitSpec.Security.PodSecurityPolicyCreate {
 
 		return &policyv1beta1.PodSecurityPolicy{
-			ObjectMeta: templates.FluentdObjectMeta(
-				r.Logging.QualifiedName(PodSecurityPolicyName),
-				util.MergeLabels(r.Logging.Labels, r.getFluentdLabels()), r.Logging),
+			ObjectMeta: templates.FluentbitObjectMeta(
+				r.Logging.QualifiedName(fluentbitPodSecurityPolicyName),
+				util.MergeLabels(r.Logging.Labels, r.getFluentBitLabels()),
+				r.Logging),
 			Spec: policyv1beta1.PodSecurityPolicySpec{
 				Privileged:               false,
 				DefaultAddCapabilities:   nil,
@@ -40,7 +41,7 @@ func (r *Reconciler) clusterPodSecurityPolicy() (runtime.Object, k8sutil.Desired
 					"configMap",
 					"emptyDir",
 					"secret",
-					"persistentVolumeClaim"},
+					"hostPath"},
 				HostNetwork: false,
 				HostPorts:   nil,
 				HostPID:     false,
@@ -61,15 +62,21 @@ func (r *Reconciler) clusterPodSecurityPolicy() (runtime.Object, k8sutil.Desired
 					Rule:   policyv1beta1.FSGroupStrategyMustRunAs,
 					Ranges: []policyv1beta1.IDRange{{Min: 1, Max: 65535}},
 				},
-				ReadOnlyRootFilesystem:          false,
+				ReadOnlyRootFilesystem:          true,
 				DefaultAllowPrivilegeEscalation: nil,
 				AllowPrivilegeEscalation:        util.BoolPointer(false),
-				AllowedHostPaths:                nil,
-				AllowedFlexVolumes:              nil,
-				AllowedCSIDrivers:               nil,
-				AllowedUnsafeSysctls:            nil,
-				ForbiddenSysctls:                nil,
-				AllowedProcMountTypes:           nil,
+				AllowedHostPaths: []policyv1beta1.AllowedHostPath{{
+					PathPrefix: "/var/lib/docker/containers",
+					ReadOnly:   true,
+				}, {
+					PathPrefix: "/var/log",
+					ReadOnly:   true,
+				}},
+				AllowedFlexVolumes:    nil,
+				AllowedCSIDrivers:     nil,
+				AllowedUnsafeSysctls:  nil,
+				ForbiddenSysctls:      nil,
+				AllowedProcMountTypes: nil,
 			},
 		}, k8sutil.StatePresent
 
