@@ -81,5 +81,12 @@ func (r *Reconciler) clusterPodSecurityPolicy() (runtime.Object, k8sutil.Desired
 		}, k8sutil.StatePresent
 
 	}
-	return nil, k8sutil.StatePresent
+	return &policyv1beta1.PodSecurityPolicy{
+		ObjectMeta: templates.FluentbitObjectMeta(
+			r.Logging.QualifiedName(fluentbitPodSecurityPolicyName),
+			util.MergeLabels(r.Logging.Labels, r.getFluentBitLabels()),
+			r.Logging),
+		Spec: policyv1beta1.PodSecurityPolicySpec{},
+	}, k8sutil.StateAbsent
+
 }
